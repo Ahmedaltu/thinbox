@@ -1,0 +1,48 @@
+<svg width="100%" viewBox="0 0 680 400" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>thinbox host vs container isolation boundary</title>
+  <desc>Structural diagram showing what the host sees vs what the container sees, separated by the kernel namespace boundary</desc>
+
+  <!-- Host outer -->
+  <rect x="30" y="30" width="290" height="330" rx="14" fill="#f1efe8" stroke="#5f5e5a" stroke-width="0.5"/>
+  <text font-family="sans-serif" font-size="14" font-weight="500" x="55" y="58" dominant-baseline="central" fill="#2c2c2a">Host (Pi 4 / Ubuntu)</text>
+
+  <rect x="50" y="75" width="250" height="50" rx="8" fill="#d3d1c7" stroke="#5f5e5a" stroke-width="0.5"/>
+  <text font-family="sans-serif" font-size="14" font-weight="500" x="175" y="97" text-anchor="middle" dominant-baseline="central" fill="#2c2c2a">All host processes</text>
+  <text font-family="sans-serif" font-size="12" x="175" y="114" text-anchor="middle" dominant-baseline="central" fill="#444441">PID 1…N visible</text>
+
+  <rect x="50" y="140" width="250" height="50" rx="8" fill="#d3d1c7" stroke="#5f5e5a" stroke-width="0.5"/>
+  <text font-family="sans-serif" font-size="14" font-weight="500" x="175" y="162" text-anchor="middle" dominant-baseline="central" fill="#2c2c2a">Host filesystem</text>
+  <text font-family="sans-serif" font-size="12" x="175" y="179" text-anchor="middle" dominant-baseline="central" fill="#444441">full / tree</text>
+
+  <rect x="50" y="205" width="250" height="50" rx="8" fill="#d3d1c7" stroke="#5f5e5a" stroke-width="0.5"/>
+  <text font-family="sans-serif" font-size="14" font-weight="500" x="175" y="227" text-anchor="middle" dominant-baseline="central" fill="#2c2c2a">Host hostname</text>
+  <text font-family="sans-serif" font-size="12" x="175" y="244" text-anchor="middle" dominant-baseline="central" fill="#444441">raspberrypi</text>
+
+  <rect x="50" y="270" width="250" height="50" rx="8" fill="#d3d1c7" stroke="#5f5e5a" stroke-width="0.5"/>
+  <text font-family="sans-serif" font-size="14" font-weight="500" x="175" y="292" text-anchor="middle" dominant-baseline="central" fill="#2c2c2a">Host network</text>
+  <text font-family="sans-serif" font-size="12" x="175" y="309" text-anchor="middle" dominant-baseline="central" fill="#444441">eth0, wlan0 visible</text>
+
+  <!-- Container outer -->
+  <rect x="360" y="30" width="290" height="330" rx="14" fill="#e1f5ee" stroke="#0f6e56" stroke-width="0.5"/>
+  <text font-family="sans-serif" font-size="14" font-weight="500" x="385" y="58" dominant-baseline="central" fill="#085041">Container (isolated)</text>
+
+  <rect x="380" y="75" width="250" height="50" rx="8" fill="#9fe1cb" stroke="#0f6e56" stroke-width="0.5"/>
+  <text font-family="sans-serif" font-size="14" font-weight="500" x="505" y="97" text-anchor="middle" dominant-baseline="central" fill="#04342c">Own PID namespace</text>
+  <text font-family="sans-serif" font-size="12" x="505" y="114" text-anchor="middle" dominant-baseline="central" fill="#085041">only sees PID 1 (/bin/sh)</text>
+
+  <rect x="380" y="140" width="250" height="50" rx="8" fill="#9fe1cb" stroke="#0f6e56" stroke-width="0.5"/>
+  <text font-family="sans-serif" font-size="14" font-weight="500" x="505" y="162" text-anchor="middle" dominant-baseline="central" fill="#04342c">Alpine rootfs</text>
+  <text font-family="sans-serif" font-size="12" x="505" y="179" text-anchor="middle" dominant-baseline="central" fill="#085041">pivot_root, host invisible</text>
+
+  <rect x="380" y="205" width="250" height="50" rx="8" fill="#9fe1cb" stroke="#0f6e56" stroke-width="0.5"/>
+  <text font-family="sans-serif" font-size="14" font-weight="500" x="505" y="227" text-anchor="middle" dominant-baseline="central" fill="#04342c">Own hostname</text>
+  <text font-family="sans-serif" font-size="12" x="505" y="244" text-anchor="middle" dominant-baseline="central" fill="#085041">thinbox-abc123</text>
+
+  <rect x="380" y="270" width="250" height="50" rx="8" fill="#9fe1cb" stroke="#0f6e56" stroke-width="0.5"/>
+  <text font-family="sans-serif" font-size="14" font-weight="500" x="505" y="292" text-anchor="middle" dominant-baseline="central" fill="#04342c">Own network ns</text>
+  <text font-family="sans-serif" font-size="12" x="505" y="309" text-anchor="middle" dominant-baseline="central" fill="#085041">only loopback lo</text>
+
+  <!-- Boundary -->
+  <line x1="340" y1="40" x2="340" y2="350" stroke="#b4b2a9" stroke-width="1" stroke-dasharray="5 4"/>
+  <text font-family="sans-serif" font-size="12" x="340" y="375" text-anchor="middle" fill="#888780">kernel namespace boundary</text>
+</svg>
