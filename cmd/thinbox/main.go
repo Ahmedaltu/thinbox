@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
+
+	"github.com/Ahmedaltu/thinbox/internal/container"
 )
 
 func main() {
@@ -13,7 +15,16 @@ func main() {
 
 	switch os.Args[1] {
 	case "run":
-		fmt.Println("thinbox: run called — not implemented yet")
+		if err := container.Run(os.Args[2:]); err != nil {
+			fmt.Fprintf(os.Stderr, "thinbox: run error: %v\n", err)
+			os.Exit(1)
+		}
+
+	case "child":
+		if err := container.Child(os.Args[2:]); err != nil {
+			fmt.Fprintf(os.Stderr, "thinbox: %v\n", err)
+			os.Exit(1)
+		}
 	case "ps":
 		fmt.Println("thinbox: ps called — not implemented yet")
 	case "help", "--help", "-h":
