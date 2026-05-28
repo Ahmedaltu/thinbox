@@ -48,7 +48,6 @@ func Child(args []string) error {
 		return fmt.Errorf("child: usage: <image> <command>")
 	}
 
-	// args[0] is image, args[1:] is command
 	command := args[1:]
 
 	// Set container hostname
@@ -56,14 +55,19 @@ func Child(args []string) error {
 		return fmt.Errorf("sethostname: %w", err)
 	}
 
-	fmt.Printf("thinbox: inside namespace, hostname=thinbox-container\n")
+	// Mount a fresh /proc so ps shows only container processes
+	if err := syscall.Mount("proc", "/proc", "proc", 0, ""); err != nil {
+		return fmt.Errorf("mount /proc: %w", err)
+	}
+	defer syscall.Unmount("/proc", 0)
 
-	// Find the command binary
+	fmt.Printf("thinbox: /proc mounted\n")
+
+	// Find and exec the command
 	path, err := exec.LookPath(command[0])
 	if err != nil {
 		return fmt.Errorf("command not found: %s", command[0])
 	}
 
-	// exec replaces this process with the user command
 	return syscall.Exec(path, command, os.Environ())
 }
