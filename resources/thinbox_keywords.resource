@@ -16,7 +16,7 @@ Build Thinbox Binary
     ${exists}=    Run Keyword And Return Status    File Should Exist    ${BINARY}
     IF    not ${exists}
         Log    Building thinbox from source...    console=True
-        ${result}=    Run Process    go    build    -o    thinbox    .
+        ${result}=    Run Process    go    build    -o    thinbox    ./cmd/thinbox/
         ...           cwd=${CURDIR}/..    timeout=60s    stderr=STDOUT
         Should Be Equal As Integers    ${result.rc}    0
         ...    msg=go build failed:\n${result.stdout}
