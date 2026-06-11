@@ -1,6 +1,8 @@
 # thinbox
 
 [![CI](https://github.com/Ahmedaltu/thinbox/actions/workflows/ci.yml/badge.svg)](https://github.com/Ahmedaltu/thinbox/actions/workflows/ci.yml)
+[![Go version](https://img.shields.io/badge/go-1.21-blue)](https://go.dev/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 A lightweight Linux container runtime written in Go.
 
