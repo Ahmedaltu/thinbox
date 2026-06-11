@@ -1,5 +1,7 @@
 # thinbox
 
+[![CI](https://github.com/Ahmedaltu/thinbox/actions/workflows/ci.yml/badge.svg)](https://github.com/Ahmedaltu/thinbox/actions/workflows/ci.yml)
+
 A lightweight Linux container runtime written in Go.
 
 thinbox runs isolated processes using Linux namespaces and cgroup v2 directly —
