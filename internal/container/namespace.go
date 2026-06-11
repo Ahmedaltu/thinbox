@@ -1,10 +1,14 @@
 package container
 
 import (
+	"crypto/rand"
 	"fmt"
 	"os"
 	"os/exec"
 	"syscall"
+	"time"
+
+	"github.com/Ahmedaltu/thinbox/internal/state"
 )
 
 // Run forks a child process inside new Linux namespaces.
@@ -34,11 +38,36 @@ func Run(args []string) error {
 			syscall.CLONE_NEWNET,
 	}
 
-	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("container exited: %w", err)
+	if err := cmd.Start(); err != nil {
+		return fmt.Errorf("container start: %w", err)
 	}
 
+	// Persist container state so "thinbox ps" can see it while it's running.
+	id := generateID()
+	s := &state.ContainerState{
+		ID:        id,
+		PID:       cmd.Process.Pid,
+		Image:     args[0],
+		Command:   args[1:],
+		StartedAt: time.Now(),
+		Status:    "running",
+	}
+	_ = state.Save(s) // best-effort — don't abort the container if state write fails
+
+	err := cmd.Wait()
+	_ = state.Delete(id) // clean up state on exit regardless of exit code
+
+	if err != nil {
+		return fmt.Errorf("container exited: %w", err)
+	}
 	return nil
+}
+
+// generateID returns a random 8-character hex container ID.
+func generateID() string {
+	b := make([]byte, 4)
+	_, _ = rand.Read(b)
+	return fmt.Sprintf("%x", b)
 }
 
 // Child runs inside the new namespaces.

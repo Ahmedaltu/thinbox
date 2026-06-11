@@ -38,6 +38,15 @@ Run Thinbox Command
     ...           timeout=${TIMEOUT}    stderr=STDOUT
     RETURN    ${result}
 
+Run Thinbox Command Background
+    [Documentation]    Start a thinbox container in the background and return the handle.
+    ...                Caller is responsible for terminating the process.
+    [Arguments]    ${cmd}    @{args}
+    ${handle}=    Start Process
+    ...           ${BINARY}    run    ${IMAGE}    ${cmd}    @{args}
+    ...           stderr=STDOUT
+    RETURN    ${handle}
+
 Cleanup Test Artifacts
     [Documentation]    Remove any temporary files created during tests.
     Run Keyword And Ignore Error    Remove File    /tmp/thinbox_test_*

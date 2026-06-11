@@ -88,6 +88,18 @@ TC-09 Invalid Command Returns Error
     ${result}=    Run Thinbox Command    /nonexistent/binary
     Should Not Be Equal As Integers    ${result.rc}    0
 
+TC-11 PS Shows Running Container
+    [Documentation]    While a container is running, thinbox ps must show it with the correct image name.
+    ...                A background sleep container is started, ps is polled, then the container is terminated.
+    [Tags]             lifecycle    requires-linux
+    ${handle}=    Run Thinbox Command Background    /bin/sleep    30
+    Sleep    1s    reason=Allow state file to be written before querying ps
+    ${result}=    Run Process    ${BINARY}    ps    timeout=${TIMEOUT}    stderr=STDOUT
+    Terminate Process    ${handle}
+    Should Be Equal As Integers    ${result.rc}    0
+    Should Contain    ${result.stdout}    alpine
+    ...    msg=Expected running container with image 'alpine' in ps output
+
 TC-10 Missing Subcommand Shows Usage
     [Documentation]    thinbox invoked with no arguments must fail with usage message.
     [Tags]             negative    smoke

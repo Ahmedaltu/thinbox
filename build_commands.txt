@@ -1,0 +1,50 @@
+go build -o thinbox ./cmd/thinbox
+./thinbox help
+./thinbox run
+./thinbox ps
+
+
+ Build first:                                                                                                      
+  go build -o thinbox ./cmd/thinbox/                                                                              
+                                                                                                                    
+  Then run:                                                                                                         
+  sudo ./thinbox run alpine /bin/sh                                                                                 
+                                                                                                                 
+  But there's a catch — you're on WSL2.
+                                                                                                                    
+  The run command re-execs the binary via /proc/self/exe after clone(2). WSL2 blocks this, so run will fail locally.
+   It only works in CI on a real Ubuntu VM.                                                                         
+                                                                                                                    
+  What you can run locally:                                                                                      
+  ./thinbox help        # always works
+  sudo ./thinbox ps     # works (reads state dir)
+
+
+
+  #### tests
+  Locally (WSL2) — only non-Linux tests:                                                                            
+  # Install RF if needed                                                                                            
+  pip install robotframework                                                                                        
+                                                                                                                    
+  # Run only tests that don't require a real kernel                                                                 
+  sudo $(which robot) --exclude requires-linux --outputdir results tests/                                           
+  This runs TC-01 and TC-10 (smoke/negative — binary exists, help output, missing args).                         
+                                                                                                                    
+  All tests — push to CI:                                                                                           
+  git push                                                                                                          
+  GitHub Actions runs the full suite on an Ubuntu VM. Results are uploaded as an HTML artifact — download from the  
+  Actions tab.                                                                                                      
+                                                                                                                    
+  What each group covers:
+                                                                                                                    
+  ┌────────────────┬─────────────────────────────────────┬─────────────────────┐                                    
+  │   Run where    │            Tags included            │     Test cases      │
+  ├────────────────┼─────────────────────────────────────┼─────────────────────┤                                    
+  │ WSL2 local     │ smoke, negative (no requires-linux) │ TC-01, TC-10        │                                 
+  ├────────────────┼─────────────────────────────────────┼─────────────────────┤
+  │ CI (Ubuntu VM) │ all                                 │ TC-01 through TC-11 │                                    
+  └────────────────┴─────────────────────────────────────┴─────────────────────┘                                    
+                                                                                                                    
+  View results after local run:                                                                                     
+  # Open the HTML report                                                                                         
+  explorer.exe results/report.html
