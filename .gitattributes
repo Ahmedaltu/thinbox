@@ -1,1 +1,6 @@
-diagrams/*.svg linguist-documentation=true
+# Ignore README SVG/HTML content in language stats
+README.md linguist-documentation=true
+
+# If you have any .html or .svg files
+*.svg linguist-vendored=true
+*.html linguist-documentation=true
